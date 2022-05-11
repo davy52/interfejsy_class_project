@@ -232,7 +232,7 @@ if __name__ == "__main__":
 
 
 """
-tabs test
-		test	test
-				test
+tabs test2
+2		test	test
+2				test
 """
