@@ -17,37 +17,37 @@ class Sim:
 
     def __init__(self):
         # zmienne zbiornika
-        _surface = 0				# powierzchnia zbiornika
-        _k = 0						# wspolczynnik przeplywu 
+        _surface = 0                # powierzchnia zbiornika
+        _k = 0                      # wspolczynnik przeplywu 
 
         # nastawy PID
         _kp = 0
         _ki = 0
         _kd = 0
 
-        _wd = 0 					# wzmocnienie anti-windup
-        _deadband = 0				#strefa nieczułości (% wartości zadanej)
+        _wd = 0                      # wzmocnienie anti-windup
+        _deadband = 0                #strefa nieczułości (% wartości zadanej)
 
         # warunki symulacji
-        _sat = [0, 0]				# wartości graniczne pompy wody
-        _t = []						# wektor czasu symulacji
-        _control_trajectory = []	# macierz wartości pozadanych i odpowiadajacych im czasow
+        _sat = [0, 0]                # wartości graniczne pompy wody
+        _t = []                      # wektor czasu symulacji
+        _control_trajectory = []     # macierz wartości pozadanych i odpowiadajacych im czasow
         
-        _h0 = 0						# warunek początkowy - poziom cieczy w zbiorniku
+        _h0 = 0                      # warunek początkowy - poziom cieczy w zbiorniku
 
         # zmienne modelu
-        _e_old = 0					# poprzednia wartość uchybu
-        _t_old = 0					# czas poprzedniego wywołania algorytmu regulatora
-        _integral = 0				# wartosc calki
-        _f_old = 0					# poprzednia wartosc wymuszenia
+        _e_old = 0                   # poprzednia wartość uchybu
+        _t_old = 0                   # czas poprzedniego wywołania algorytmu regulatora
+        _integral = 0                # wartosc calki
+        _f_old = 0                   # poprzednia wartosc wymuszenia
 
-        _iterator = 0				# iterator potrzebny do zapamietania aktualnej pozycji w macierzy trajektowii
+        _iterator = 0                # iterator potrzebny do zapamietania aktualnej pozycji w macierzy trajektowii
 
         # vektory do wykresów
-        _h = []						# wektor wartosci wysokosci slupa
-        _tt = [0]					# wektor czasu regulatora
-        _ff = [0]					# wekor wymuszenia regulatora
-        _ee = [0]					# wektor uchybu (pracy regulatora)
+        _h = []                      # wektor wartosci wysokosci slupa
+        _tt = [0]                    # wektor czasu regulatora
+        _ff = [0]                    # wekor wymuszenia regulatora
+        _ee = [0]                    # wektor uchybu (pracy regulatora)
 
 
     @staticmethod
@@ -63,36 +63,33 @@ class Sim:
         if obj._control_trajectory[1][obj._iterator + 1] < t:
             obj._iterator += 1
         hz = obj._control_trajectory[0][obj._iterator]
-        e = hz - y																# uchyb sterowania
+        e = hz - y                                              # uchyb sterowania
 
         # reuglator PID
-        if (t - obj._t_old) > 0.009 and (e < hz * obj._deadband or e > -hz * obj._deadband):													# krok czasu funkcji ODE jest czasem zbyt bliski zeru
-            obj._integral = obj._integral + ((e)*(t - obj._t_old))		# czlon calkujacy
-            dedt = (e - obj._e_old)/(t - obj._t_old)								# czlon rozniczkujacy
-            f = (obj._kp * e) + (obj._ki * obj._integral) + (obj._kd * dedt)				# wymuszenie
-
-            print(f'kp = {obj._kp}\tKi = {obj._ki}\tKd = {obj._kd}\nt = {t}\tdt = {t - obj._t_old}\t\thz = {hz}\te = {e}\tI = {obj._integral}\tdedt = {dedt}\tF = {f}\tF_old = {obj._f_old}')
-            print(f'real f = {obj._kp * e + obj._ki * obj._integral + obj._kd * dedt}')
+        if (t - obj._t_old) > 0.009 and (e < hz * obj._deadband or e > -hz * obj._deadband):        # krok czasu funkcji ODE jest czasem zbyt bliski zeru
+            obj._integral = obj._integral + ((e)*(t - obj._t_old))                                  # czlon calkujacy
+            dedt = (e - obj._e_old)/(t - obj._t_old)                                                # czlon rozniczkujacy
+            f = (obj._kp * e) + (obj._ki * obj._integral) + (obj._kd * dedt)                        # wymuszenie
+            
             # saturacja + antiwindup
             if f < obj._sat[0]:
-                print(f"========== f < {obj._sat[0]}0 \t f = {f} ==========")
                 obj._integral = obj._integral - obj._wd * (f - obj._sat[0])
                 f = obj._sat[0]
+
             elif f > obj._sat[1]:
-                print(f"========== f > {obj._sat[1]} \t f = {f} ===========")
                 obj._integral = obj._integral - obj._wd * (f - obj._sat[1])
                 f = obj._sat[1]
-            #print(f'f = {f}\n')
 
     
-            [obj._e_old, obj._t_old, obj._f_old] = [e, t, f]						#zapamietanie wartosci dla nastepnego wywolania alg. reg.
+            [obj._e_old, obj._t_old, obj._f_old] = [e, t, f]                                        #zapamietanie wartosci dla nastepnego wywolania alg. reg.
+
             # zapisanie wartości potrzebnych do wykresów
             obj._tt.append(t)
             obj._ee.append(e)
             obj._ff.append(f)
 
         else:
-            f = obj._f_old															#dla zbyt krotkiego kroku utrzymuj wczesniejsze wymuszenie
+            f = obj._f_old                                                                          #dla zbyt krotkiego kroku utrzymuj wczesniejsze wymuszenie
         
         # model zbiornika
         dydt = (1/obj._surface) * f - ((obj._k/obj._surface) * np.sqrt(y))
@@ -138,7 +135,7 @@ class Sim:
     def set_sim_time(self, t0: float, t_end: float):
         """
         Ustaw wektor czasu symulacji
-        """	
+        """    
         self._t = np.arange(t0, t_end, t_end*1e-5)
 
     def set_tank_variables(self, surface: float, k: float):
@@ -176,7 +173,7 @@ class Sim:
         Odbierz wyniki symulacji
         
         :return: [t, h, tt, ee, ff]
-        :rtype:	t - wektor czasu symulacji
+        :rtype:    t - wektor czasu symulacji
                 h - wektor wartosci poziomu cieczy
                 tt - wektor czasu wywolan regulatora PID
                 ee - wektor uchybu wywolan regulatora PID
@@ -196,12 +193,12 @@ def module_test():
     symulacja = Sim()
     
     # parametry symulacji
-    symulacja.set_tank_variables(		surface=2.0, 	k=1.2												)	# charakterystyka zbiornika: surface - powierzchnia podstawy zbiornika, k - wpółczynnik wypływu cieczy ze zbiornika
-    symulacja.set_pid_settings(			kp=2, 			ki=0.8, 	kd=0.0, 	wd=0.2, 	deadband=0.05	)	# nastawy regulatora <IND>: Kp - wzmocnienie proporcjonalne, Ki - wzmocnienie członu całkującego, Kd - wzmocnienie członu różniczkującego, Wd - wmocnienie filtru przeciwnasyceniowego, deadbanc - szerokość pasma nieczułości [% y_zad], 
-    symulacja.set_saturation(			sat_low=0, 		sat_high=7											)	# saturacja urządzenia wykonującego: sat_low - dolna granica, sat_high - górna granica
-    symulacja.set_initial_condition(	h0=0.0																)	# stan początkowy zbiornika: h0 - początkowy poziom wody
-    symulacja.set_sim_time(				t0=0, t_end=30														) 	# czas symulacji: t0 - czas rozpoczęcia, t_end - czas zakończenia symulacji
-    symulacja.set_trajectory(			y_zadane=[5.0, 7.6, 2.0], t_y=[0.0, 10.0, 20.0]						)	# trajektoria zadana: y_zadane - wartości zadane, t_y - czasy odpowiadające momentom zadania kolejnej wartości
+    symulacja.set_tank_variables(        surface=2.0,     k=1.2                                                   )    # charakterystyka zbiornika: surface - powierzchnia podstawy zbiornika, k - wpółczynnik wypływu cieczy ze zbiornika
+    symulacja.set_pid_settings(            kp=2,             ki=0.8,     kd=0.0,     wd=0.2,     deadband=0.05    )    # nastawy regulatora <IND>: Kp - wzmocnienie proporcjonalne, Ki - wzmocnienie członu całkującego, Kd - wzmocnienie członu różniczkującego, Wd - wmocnienie filtru przeciwnasyceniowego, deadbanc - szerokość pasma nieczułości [% y_zad], 
+    symulacja.set_saturation(            sat_low=0,         sat_high=7                                            )    # saturacja urządzenia wykonującego: sat_low - dolna granica, sat_high - górna granica
+    symulacja.set_initial_condition(    h0=0.0                                                                    )    # stan początkowy zbiornika: h0 - początkowy poziom wody
+    symulacja.set_sim_time(                t0=0, t_end=30                                                         )    # czas symulacji: t0 - czas rozpoczęcia, t_end - czas zakończenia symulacji
+    symulacja.set_trajectory(            y_zadane=[5.0, 7.6, 2.0], t_y=[0.0, 10.0, 20.0]                          )    # trajektoria zadana: y_zadane - wartości zadane, t_y - czasy odpowiadające momentom zadania kolejnej wartości
     
     # uruchomienie symulacji
     symulacja.run_simulation()
@@ -233,7 +230,7 @@ if __name__ == "__main__":
 
 """
 tabs test6
-        test	test
+        test    test
                 test
                 testetst
 """
