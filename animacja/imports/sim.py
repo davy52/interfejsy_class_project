@@ -66,7 +66,7 @@ class Sim:
 		e = hz - y												# uchyb sterowania
 
 		# reuglator PID
-		if (t - obj._t_old) > 0.009 and (e < hz * obj._deadband or e > -hz * obj._deadband):		# krok czasu funkcji ODE jest czasem zbyt bliski zeru
+		if (t - obj._t_old) > 0.009 and (e > hz * obj._deadband or e < -hz * obj._deadband):		# krok czasu funkcji ODE jest czasem zbyt bliski zeru
 			obj._integral = obj._integral + ((e)*(t - obj._t_old))									# czlon calkujacy
 			dedt = (e - obj._e_old)/(t - obj._t_old)												# czlon rozniczkujacy
 			f = (obj._kp * e) + (obj._ki * obj._integral) + (obj._kd * dedt)						# wymuszenie
@@ -194,11 +194,11 @@ def module_test():
 	
 	# parametry symulacji
 	symulacja.set_tank_variables(			surface=2.0,		k=1.2												)	# charakterystyka zbiornika: surface - powierzchnia podstawy zbiornika, k - wpółczynnik wypływu cieczy ze zbiornika
-	symulacja.set_pid_settings(				kp=2,				ki=0.8,		kd=0.0,		wd=0.2,		deadband=0.05	)	# nastawy regulatora <IND>: Kp - wzmocnienie proporcjonalne, Ki - wzmocnienie członu całkującego, Kd - wzmocnienie członu różniczkującego, Wd - wmocnienie filtru przeciwnasyceniowego, deadbanc - szerokość pasma nieczułości [% y_zad], 
+	symulacja.set_pid_settings(				kp=2,				ki=0.8,		kd=0.2,		wd=0.1,		deadband=0.0	)	# nastawy regulatora <IND>: Kp - wzmocnienie proporcjonalne, Ki - wzmocnienie członu całkującego, Kd - wzmocnienie członu różniczkującego, Wd - wmocnienie filtru przeciwnasyceniowego, deadbanc - szerokość pasma nieczułości [% y_zad], 
 	symulacja.set_saturation(				sat_low=0,			sat_high=7											)	# saturacja urządzenia wykonującego: sat_low - dolna granica, sat_high - górna granica
 	symulacja.set_initial_condition(		h0=0.0																	)	# stan początkowy zbiornika: h0 - początkowy poziom wody
-	symulacja.set_sim_time(					t0=0,				t_end=30											)	# czas symulacji: t0 - czas rozpoczęcia, t_end - czas zakończenia symulacji
-	symulacja.set_trajectory(				y_zadane=[5.0, 7.6, 2.0], 		t_y=[0.0, 10.0, 20.0]					)	# trajektoria zadana: y_zadane - wartości zadane, t_y - czasy odpowiadające momentom zadania kolejnej wartości
+	symulacja.set_sim_time(					t0=0,				t_end=200											)	# czas symulacji: t0 - czas rozpoczęcia, t_end - czas zakończenia symulacji
+	symulacja.set_trajectory(				y_zadane=[10.0, 5.0, 0.0, 15.0, 5.0, 10.0, 5.0, 0.0, 15.0, 5.0, 10.0], 		t_y=[0.0, 20.0, 40.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0, 200.0]					)	# trajektoria zadana: y_zadane - wartości zadane, t_y - czasy odpowiadające momentom zadania kolejnej wartości
 	
 	# uruchomienie symulacji
 	symulacja.run_simulation()
