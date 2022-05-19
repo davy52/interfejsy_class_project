@@ -26,11 +26,11 @@ canvas.mpl_connect(
     "key_press_event", lambda event: print(f"you pressed {event.key}"))
 canvas.mpl_connect("key_press_event", key_press_handler)
 
-kurwa = 0.01
+omega = 0.01
 
 def test():
-	global anim, kurwa
-	kurwa = -0.06
+	global anim, omega
+	omega = -0.06
 	#anim.frame_seq = anim.new_frame_seq()
 	anim.resume()
 	
@@ -48,7 +48,7 @@ def init():
 
 def animate(i):
     x = np.linspace(0, 2, 1000)
-    y = np.sin(2 * np.pi * (x - kurwa * i))
+    y = np.sin(2 * np.pi * (x - omega * i))
     line.set_data(x, y)
     return line,
 
