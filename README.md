@@ -11,3 +11,8 @@ System control visualization for class project
 ## uruchomienie programu:
 
 cmd: python animacja\animacja.py
+
+## zmiana ustawień symulacji
+
+animacja\animacja.py (186:199)
+
