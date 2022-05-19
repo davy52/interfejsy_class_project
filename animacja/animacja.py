@@ -117,7 +117,7 @@ class Window:
 	def _zbiornik_animate(self: 'Window', i: int):
 		x = np.linspace(0, 1, 1000)
 		y0 = self._zbiornik_y[i] 
-		y = np.add(y0, np.sin(x * 15 + 0.0001*i) * 0.1)
+		y = np.add(y0, np.sin(x * 15 + 0.01*i) * 0.1)
 		self._line_zbiornik.set_data(x, y)
 		self._ax_zbiornik.collections.clear()
 		self._ax_zbiornik.fill_between(x, y, facecolor='#4780cc')
