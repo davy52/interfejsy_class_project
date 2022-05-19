@@ -8,7 +8,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import numpy as np
 
-from sim import Sim
+from imports.sim import Sim
 
 
 class Window:
