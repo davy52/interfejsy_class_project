@@ -194,7 +194,7 @@ def module_test():
 	
 	# parametry symulacji
 	symulacja.set_tank_variables(			surface=2.0,		k=1.2												)	# charakterystyka zbiornika: surface - powierzchnia podstawy zbiornika, k - wpółczynnik wypływu cieczy ze zbiornika
-	symulacja.set_pid_settings(				kp=2,				ki=0.8,		kd=0.,		wd=0.1,		deadband=0.0	)	# nastawy regulatora <IND>: Kp - wzmocnienie proporcjonalne, Ki - wzmocnienie członu całkującego, Kd - wzmocnienie członu różniczkującego, Wd - wmocnienie filtru przeciwnasyceniowego, deadbanc - szerokość pasma nieczułości [% y_zad], 
+	symulacja.set_pid_settings(				kp=20,				ki=0.8,		kd=0.,		wd=0.1,		deadband=0.0	)	# nastawy regulatora <IND>: Kp - wzmocnienie proporcjonalne, Ki - wzmocnienie członu całkującego, Kd - wzmocnienie członu różniczkującego, Wd - wmocnienie filtru przeciwnasyceniowego, deadbanc - szerokość pasma nieczułości [% y_zad], 
 	symulacja.set_saturation(				sat_low=0,			sat_high=7											)	# saturacja urządzenia wykonującego: sat_low - dolna granica, sat_high - górna granica
 	symulacja.set_initial_condition(		h0=0.0																	)	# stan początkowy zbiornika: h0 - początkowy poziom wody
 	symulacja.set_sim_time(					t0=0,				t_end=100											)	# czas symulacji: t0 - czas rozpoczęcia, t_end - czas zakończenia symulacji
