@@ -18,37 +18,37 @@ class Sim:
 
     def __init__(self):
         # zmienne zbiornika
-        _surface = 0        		# powierzchnia zbiornika
-        _k = 0						# wspolczynnik przeplywu
+        _surface = 0                # powierzchnia zbiornika
+        _k = 0                      # wspolczynnik przeplywu
 
         # nastawy PID
         _kp = 0
         _ki = 0
         _kd = 0
 
-        _wd = 0						# wzmocnienie anti-windup
-        _deadband = 0				# strefa nieczułości (% wartości zadanej)
+        _wd = 0                     # wzmocnienie anti-windup
+        _deadband = 0               # strefa nieczułości (% wartości zadanej)
 
         # warunki symulacji
-        _sat = [0, 0]				# wartości graniczne pompy wody
-        _t = []						# wektor czasu symulacji
+        _sat = [0, 0]               # wartości graniczne pompy wody
+        _t = []                     # wektor czasu symulacji
         _control_trajectory = []    # macierz wartości zadanych i ich czasów
 
-        _h0 = 0						# warunek początkowy - poziom cieczy w zbiorniku
+        _h0 = 0                     # warunek początkowy - poziom cieczy w zbiorniku
 
         # zmienne modelu
-        _e_old = 0					# poprzednia wartość uchybu
-        _t_old = 0					# czas poprzedniego wywołania algorytmu regulatora
-        _integral = 0				# wartosc calki
-        _f_old = 0 					# poprzednia wartosc wymuszenia
+        _e_old = 0                  # poprzednia wartość uchybu
+        _t_old = 0                  # czas poprzedniego wywołania algorytmu regulatora
+        _integral = 0               # wartosc calki
+        _f_old = 0                  # poprzednia wartosc wymuszenia
 
-        _iterator = 0				# iterator macierzy trajektorii
+        _iterator = 0               # iterator macierzy trajektorii
 
         # vektory do wykresów
-        _h = []						# wektor wartosci wysokosci slupa
-        _tt = [0]					# wektor czasu regulatora
-        _ff = [0]					# wekor wymuszenia regulatora
-        _ee = [0]					# wektor uchybu (pracy regulatora)
+        _h = []                     # wektor wartosci wysokosci slupa
+        _tt = [0]                   # wektor czasu regulatora
+        _ff = [0]                   # wekor wymuszenia regulatora
+        _ee = [0]                   # wektor uchybu (pracy regulatora)
 
     @staticmethod
     def _model(y, t, obj: 'Sim'):
@@ -63,7 +63,7 @@ class Sim:
         if obj._control_trajectory[1][obj._iterator + 1] < t:
             obj._iterator += 1
         hz = obj._control_trajectory[0][obj._iterator]
-        e = hz - y												# uchyb sterowania
+        e = hz - y                                         # uchyb sterowania
 
         # reuglator PID
         if ((t - obj._t_old) > 0.009 and
@@ -71,8 +71,8 @@ class Sim:
                     e > hz * obj._deadband or
                     e < -hz * obj._deadband
                 )):
-            obj._integral += ((e)*(t - obj._t_old))			# człon calkujacy
-            dedt = (e - obj._e_old)/(t - obj._t_old)	    # człon różniczki
+            obj._integral += ((e)*(t - obj._t_old))         # człon calkujacy
+            dedt = (e - obj._e_old)/(t - obj._t_old)        # człon różniczki
             f = (                                           # wymuszenie
                 (obj._kp * e) +
                 (obj._ki * obj._integral) +

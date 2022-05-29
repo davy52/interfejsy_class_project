@@ -219,7 +219,7 @@ class Window:
 
     # symulacja
     def _init_sim(self):
-        self._sim = Sim()		            # definicja obiektu klasy Sim
+        self._sim = Sim()                   # definicja obiektu klasy Sim
 
         # parametry symulacji
         self._sim.set_tank_variables(       # charakterystyka zbiornika
@@ -250,7 +250,7 @@ class Window:
             )
         self._zbiornik_traj = self._sim.get_trajectory()
 
-        self._sim_speed = 10			    # okres odświerzania animacji
+        self._sim_speed = 10                # okres odświerzania animacji
 
     def run_sim(self):
         self._sim.run_simulation()
